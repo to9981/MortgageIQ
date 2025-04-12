@@ -71,18 +71,42 @@ export interface AmortizationEntry {
  * @returns A promise that resolves to a MortgageQuote object.
  */
 export async function calculateMortgage(details: MortgageDetails): Promise<MortgageQuote> {
-  // TODO: Implement this by calling an API.
+  const { loanAmount, interestRate, loanTerm } = details;
+
+  const monthlyInterestRate = interestRate / 12;
+  const numberOfPayments = loanTerm * 12;
+
+  // Calculate monthly payment using the standard mortgage formula
+  let monthlyPayment =
+    (loanAmount * monthlyInterestRate) /
+    (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+
+  let remainingBalance = loanAmount;
+  let totalInterestPaid = 0;
+  const amortizationSchedule: AmortizationEntry[] = [];
+
+  for (let paymentNumber = 1; paymentNumber <= numberOfPayments; paymentNumber++) {
+    const interestPaid = remainingBalance * monthlyInterestRate;
+    const principalPaid = monthlyPayment - interestPaid;
+
+    remainingBalance -= principalPaid;
+    totalInterestPaid += interestPaid;
+
+    amortizationSchedule.push({
+      paymentNumber,
+      principalPaid,
+      interestPaid,
+      remainingBalance: Math.max(0, remainingBalance), // Prevent negative balance due to rounding errors
+    });
+  }
+
+  totalInterestPaid = parseFloat(totalInterestPaid.toFixed(2));
+  // Fix: Re-assign the result of parseFloat to the existing monthlyPayment variable
+  monthlyPayment = parseFloat(monthlyPayment.toFixed(2));
 
   return {
-    monthlyPayment: 1500,
-    totalInterestPaid: 100000,
-    amortizationSchedule: [
-      {
-        paymentNumber: 1,
-        principalPaid: 500,
-        interestPaid: 1000,
-        remainingBalance: details.loanAmount - 500,
-      },
-    ],
+    monthlyPayment,
+    totalInterestPaid,
+    amortizationSchedule,
   };
 }
