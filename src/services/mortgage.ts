@@ -77,7 +77,7 @@ export async function calculateMortgage(details: MortgageDetails): Promise<Mortg
   const numberOfPayments = loanTerm * 12;
 
   // Calculate monthly payment using the standard mortgage formula
-  let monthlyPayment =
+  const monthlyPayment =
     (loanAmount * monthlyInterestRate) /
     (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
 
@@ -100,13 +100,12 @@ export async function calculateMortgage(details: MortgageDetails): Promise<Mortg
     });
   }
 
-  totalInterestPaid = parseFloat(totalInterestPaid.toFixed(2));
-  // Fix: Re-assign the result of parseFloat to the existing monthlyPayment variable
-  monthlyPayment = parseFloat(monthlyPayment.toFixed(2));
+  const formattedTotalInterestPaid = parseFloat(totalInterestPaid.toFixed(2));
+  const formattedMonthlyPayment = parseFloat(monthlyPayment.toFixed(2));
 
   return {
-    monthlyPayment,
-    totalInterestPaid,
+    monthlyPayment: formattedMonthlyPayment,
+    totalInterestPaid: formattedTotalInterestPaid,
     amortizationSchedule,
   };
 }
