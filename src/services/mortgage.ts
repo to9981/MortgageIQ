@@ -7,7 +7,7 @@ export interface MortgageDetails {
    */
   loanAmount: number;
   /**
-   * The annual interest rate as a decimal (e.g., 0.05 for 5%).
+   * 1.The annual interest rate as a decimal (e.g., 0.05 for 5%).
    */
   interestRate: number;
   /**
