@@ -12,9 +12,9 @@ interface MortgageInputFormProps {
 
 // Function to format numbers with commas
 const formatNumberWithCommas = (value: string): string => {
-  const number = parseFloat(value);
+  const number = parseFloat(value.replace(/,/g, ''));
   if (isNaN(number)) {
-    return value;
+    return "";
   }
   return number.toLocaleString();
 };
