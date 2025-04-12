@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -11,6 +10,20 @@ interface MortgageInputFormProps {
   onCalculate: (details: MortgageDetails) => void;
 }
 
+// Function to format numbers with commas
+const formatNumberWithCommas = (value: string): string => {
+  const number = parseFloat(value);
+  if (isNaN(number)) {
+    return value;
+  }
+  return number.toLocaleString();
+};
+
+// Function to remove commas before parsing
+const removeCommas = (value: string): string => {
+  return value.replace(/,/g, '');
+};
+
 export const MortgageInputForm: React.FC<MortgageInputFormProps> = ({ onCalculate }) => {
   const [loanAmount, setLoanAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
@@ -22,11 +35,11 @@ export const MortgageInputForm: React.FC<MortgageInputFormProps> = ({ onCalculat
     e.preventDefault();
 
     const details: MortgageDetails = {
-      loanAmount: parseFloat(loanAmount),
-      interestRate: parseFloat(interestRate) / 100,
-      loanTerm: parseInt(loanTerm),
-      downPayment: parseFloat(downPayment),
-      propertyValue: parseFloat(propertyValue),
+      loanAmount: parseFloat(removeCommas(loanAmount)),
+      interestRate: parseFloat(removeCommas(interestRate)) / 100,
+      loanTerm: parseInt(removeCommas(loanTerm)),
+      downPayment: parseFloat(removeCommas(downPayment)),
+      propertyValue: parseFloat(removeCommas(propertyValue)),
     };
 
     onCalculate(details);
@@ -37,55 +50,70 @@ export const MortgageInputForm: React.FC<MortgageInputFormProps> = ({ onCalculat
       <div>
         <Label htmlFor="loanAmount">Loan Amount</Label>
         <Input
-          type="number"
+          type="text"
           id="loanAmount"
           placeholder="Enter loan amount"
           value={loanAmount}
-          onChange={(e) => setLoanAmount(e.target.value)}
+          onChange={(e) => {
+            const formattedValue = formatNumberWithCommas(e.target.value);
+            setLoanAmount(formattedValue);
+          }}
           required
         />
       </div>
       <div>
         <Label htmlFor="interestRate">Interest Rate (%)</Label>
         <Input
-          type="number"
+          type="text"
           id="interestRate"
           placeholder="Enter interest rate"
           value={interestRate}
-          onChange={(e) => setInterestRate(e.target.value)}
+          onChange={(e) => {
+            const formattedValue = formatNumberWithCommas(e.target.value);
+            setInterestRate(formattedValue);
+          }}
           required
         />
       </div>
       <div>
         <Label htmlFor="loanTerm">Loan Term (Years)</Label>
         <Input
-          type="number"
+          type="text"
           id="loanTerm"
           placeholder="Enter loan term"
           value={loanTerm}
-          onChange={(e) => setLoanTerm(e.target.value)}
+          onChange={(e) => {
+            const formattedValue = formatNumberWithCommas(e.target.value);
+            setLoanTerm(formattedValue);
+          }}
           required
         />
       </div>
       <div>
         <Label htmlFor="downPayment">Down Payment</Label>
         <Input
-          type="number"
+          type="text"
           id="downPayment"
           placeholder="Enter down payment"
           value={downPayment}
-          onChange={(e) => setDownPayment(e.target.value)}
+          onChange={(e) => {
+            const formattedValue = formatNumberWithCommas(e.target.value);
+            setDownPayment(formattedValue);
+          }}
           required
         />
       </div>
       <div>
         <Label htmlFor="propertyValue">Property Value</Label>
         <Input
-          type="number"
+          type="text"
           id="propertyValue"
           placeholder="Enter property value"
           value={propertyValue}
-          onChange={(e) => setPropertyValue(e.target.value)}
+          onChange={(e) => {
+            const formattedValue = formatNumberWithCommas(e.target.value);
+            setPropertyValue(formattedValue);
+          }}
           required
         />
       </div>
